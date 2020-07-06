@@ -1,0 +1,12 @@
+Requirements
+
+- Get recipe    
+    - Scrape website for ingredients
+    - Scrape website for method
+
+- Email recipe/instructions to self
+- Add recipie to OneNote
+
+Optional
+
+- Add ingredients to shopping list
