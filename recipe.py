@@ -8,12 +8,17 @@ from datetime import date
 #This needs cleaning up and commenting
 #First run through is just to get a working program
 #Second will be to organise and neaten
+#Current Issues - 
+#   Name only gets the first line
+#   Link gets OneNote to Grab all page information in a stupid format
+#   Formatting can be wonk
 
 today = date.today()
 
 ingredients = ""
 method = ""
 recipe = ""
+msg = ""
 
 #Get Website
 r1 = requests.get("https://spoonacular.com/")
@@ -49,7 +54,29 @@ for a in recipeMethod:
     method = (a.text)
     method += "\n"
 
-recipe += rotdName + "\n" + rotdLink + "\n" + ingredients + "\n" + method
-print(recipe)
+recipe += rotdName + "\n\n" + rotdLink[8:] + "\n\n" + ingredients + "\n" + method
+#print(recipe)
 
+#User Details
+gmail_user = 'emails@luigi-marino.com'
+gmail_password = '*7gMaH1aGf31'
+sent_from = gmail_user
+to = ['me@onenote.com']
 
+#Email Subject
+msg = 'Subject: @Recipes' + "\n"
+
+#Add news to email message
+msg += recipe
+
+#Try block for sending email
+try:
+    server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+    server.ehlo()
+    server.login(gmail_user, gmail_password)
+    server.sendmail(sent_from, to, msg)
+    server.close
+
+    print ('Email Sent!')
+except:
+    print ('Something went wrong')
