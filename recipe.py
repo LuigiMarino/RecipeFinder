@@ -6,40 +6,40 @@ from email.mime.multipart import MIMEMultipart
 from datetime import date
 
 #This needs cleaning up and commenting
-#First run through is just to get a working program
-#Second will be to organise and neaten
-#Current Issues - 
-#   Name only gets the first line
-#   Link gets OneNote to Grab all page information in a stupid format
-#   Formatting can be wonk
 
+#Get Todays Date
 today = date.today()
 
+#String Variables
+name = ""
 ingredients = ""
 method = ""
+nutrition = ""
 recipe = ""
 msg = ""
 
-#Get Website
+#Get Website Homepage
 r1 = requests.get("https://spoonacular.com/")
 page1 = BeautifulSoup(r1.text, 'html.parser')
 
-#Get Recipe Of The Day
+#Get Recipe Of The Day and Link
 rotdDiv = page1.find('div', attrs={'id': re.compile('recipeOfTheDay')})
 rotdA = rotdDiv.findChildren('a', recursive=False)
-
-#Cycle Through And Print href
 for a in rotdA[0:1]: 
     rotdLink = ("https://spoonacular.com{}".format(a.get('href')))
-    rotdName = (a.text.strip())
 
+#Get ROTD Page
 r2 = requests.get(rotdLink)
 page2 = BeautifulSoup(r2.text, 'html.parser')
 
-ingredientsList = page2.find_all('div', attrs={'class': 'spoonacular-ingredient-list'})
+#Get ROTD Page Information
+rotdName = page2.title.string
+recipeIngredients = page2.find_all('div', attrs={'class': 'spoonacular-ingredient-list'})
+recipeMethod = page2.findChildren('div', attrs={'class' : 'recipeInstructions'})
+recipeNutrition = page2.findChildren('div', attrs={'class' : 'spoonacular-quickview'})
 
-i = 1
-for a in ingredientsList:
+#Get Ingredients List
+for a in recipeIngredients:
     ingredientsName = a.findChildren('div', attrs={'class' : 'spoonacular-name'})
     ingredientsAmount = a.findChildren('div', attrs={'class' : 'spoonacular-amount spoonacular-metric'})
     for b in ingredientsName:
@@ -48,14 +48,16 @@ for a in ingredientsList:
         amount = (c.text)
     ingredients += ("%s - %s\n"%(name,amount))
 
-recipeMethod = page2.findChildren('div', attrs={'class' : 'recipeInstructions'})
-
+#Get Instructions List
 for a in recipeMethod:
     method = (a.text)
     method += "\n"
 
-recipe += rotdName + "\n\n" + rotdLink[8:] + "\n\n" + ingredients + "\n" + method
-#print(recipe)
+for a in recipeNutrition:
+    nutrition += ((a.text)+'\n')
+
+#Combine All Parts Into Recipe
+recipe += rotdName + "\n\n" + rotdLink[8:] + "\n\n" + ingredients + "\n" + method + "\n" + nutrition
 
 #User Details
 gmail_user = 'emails@luigi-marino.com'
@@ -66,7 +68,7 @@ to = ['me@onenote.com']
 #Email Subject
 msg = 'Subject: @Recipes' + "\n"
 
-#Add news to email message
+#Add Recipe to email message
 msg += recipe
 
 #Try block for sending email
