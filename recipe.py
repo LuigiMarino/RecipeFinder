@@ -7,7 +7,8 @@ from datetime import date
 
 today = date.today()
 
-#recipe = ""
+ingredients = ""
+method = ""
 
 #Get Website
 r1 = requests.get("https://spoonacular.com/")
@@ -20,6 +21,7 @@ rotdA = rotdDiv.findChildren('a', recursive=False)
 #Cycle Through And Print href
 for a in rotdA[0:1]: 
     rotdLink = ("https://spoonacular.com{}".format(a.get('href')))
+    print(a.text.strip())
     print(rotdLink)
 
 r2 = requests.get(rotdLink)
@@ -33,6 +35,10 @@ for a in ingredientsList:
     ingredientsName = a.findChildren('div', attrs={'class' : 'spoonacular-name'})
     ingredientsAmount = a.findChildren('div', attrs={'class' : 'spoonacular-amount spoonacular-metric'})
     for b in ingredientsName:
-        print(b.text)
+        name = (b.text)
+    for c in ingredientsAmount:
+        amount = (c.text)
+    ingredients += ("%s - %s\n"%(name,amount))
     #print(ingredientsAmount.contents)
-    i += 1
+
+print(ingredients)
