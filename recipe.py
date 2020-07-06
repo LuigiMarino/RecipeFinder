@@ -5,6 +5,10 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from datetime import date
 
+#This needs cleaning up and commenting
+#First run through is just to get a working program
+#Second will be to organise and neaten
+
 today = date.today()
 
 ingredients = ""
