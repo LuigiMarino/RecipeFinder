@@ -9,6 +9,7 @@ today = date.today()
 
 ingredients = ""
 method = ""
+recipe = ""
 
 #Get Website
 r1 = requests.get("https://spoonacular.com/")
@@ -21,14 +22,12 @@ rotdA = rotdDiv.findChildren('a', recursive=False)
 #Cycle Through And Print href
 for a in rotdA[0:1]: 
     rotdLink = ("https://spoonacular.com{}".format(a.get('href')))
-    print(a.text.strip())
-    print(rotdLink)
+    rotdName = (a.text.strip())
 
 r2 = requests.get(rotdLink)
 page2 = BeautifulSoup(r2.text, 'html.parser')
 
 ingredientsList = page2.find_all('div', attrs={'class': 'spoonacular-ingredient-list'})
-#ingredientsName = ingredientsList.findChildren('div', attrs={'class' : 'spoonacular-name'})
 
 i = 1
 for a in ingredientsList:
@@ -39,6 +38,14 @@ for a in ingredientsList:
     for c in ingredientsAmount:
         amount = (c.text)
     ingredients += ("%s - %s\n"%(name,amount))
-    #print(ingredientsAmount.contents)
 
-print(ingredients)
+recipeMethod = page2.findChildren('div', attrs={'class' : 'recipeInstructions'})
+
+for a in recipeMethod:
+    method = (a.text)
+    method += "\n"
+
+recipe += rotdName + "\n" + rotdLink + "\n" + ingredients + "\n" + method
+print(recipe)
+
+
