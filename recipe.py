@@ -7,7 +7,7 @@ from datetime import date
 
 today = date.today()
 
-recipe = ""
+#recipe = ""
 
 #Get Website
 r1 = requests.get("https://spoonacular.com/")
