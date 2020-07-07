@@ -6,6 +6,7 @@ from email.mime.multipart import MIMEMultipart
 from datetime import date
 
 #This needs cleaning up and commenting
+#Rewrite all code to see what can be changed
 
 #Get Todays Date
 today = date.today()
